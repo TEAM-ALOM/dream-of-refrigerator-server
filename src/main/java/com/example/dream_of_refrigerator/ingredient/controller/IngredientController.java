@@ -1,6 +1,8 @@
 package com.example.dream_of_refrigerator.ingredient.controller;
 
 import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.ingredient.dto.BasicIngredientDto;
+import com.example.dream_of_refrigerator.ingredient.dto.DetailIngredientDto;
 import com.example.dream_of_refrigerator.ingredient.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +15,24 @@ import java.util.List;
 public class IngredientController {
     private final IngredientService ingredientService;
     //모든 재료 조회(Ingredient table에 저장된 모든 것 전체 조회)
-    @GetMapping//기본은 '전체'카테고리로, DB에 등록되어있는 전체 재료 조회
-    public ResponseEntity<List<Ingredient>> getAllIngredients() {
-        List<Ingredient> ingredients = ingredientService.findAll();
+    @GetMapping
+    public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
+        List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
     }
+
     //카테고리별 재료 조회(Ingredient table에서 ingredientCategory가 같은 것끼리 조회)
-    @GetMapping("/category/{categoryId}")//category/1  category/2 ...
-    public ResponseEntity<List<Ingredient>> getIngredientsByCategory(@PathVariable Long categoryId) {
-        List<Ingredient> ingredients = ingredientService.findByCategory(categoryId);
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<List<BasicIngredientDto>> getIngredientsByCategoryBasic(@PathVariable Long categoryId) {
+        List<BasicIngredientDto> ingredients = ingredientService.findByCategoryBasic(categoryId);
+        return ResponseEntity.ok(ingredients);
+    }
+
+    // 재료 정보 상세조회
+    // UUID로 재료 상세 조회
+    @GetMapping("/{ingredientUuid}")
+    public ResponseEntity<List<DetailIngredientDto>> getIngredientDetailsByUuid(@PathVariable String ingredientUuid) {
+        List<DetailIngredientDto> ingredients = ingredientService.findAllDetails(ingredientUuid);
         return ResponseEntity.ok(ingredients);
     }
 
