@@ -1,7 +1,7 @@
-package com.example.dream_of_refrigerator.controller;
+package com.example.dream_of_refrigerator.ingredient.controller;
 
-import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
-import com.example.dream_of_refrigerator.service.IngredientService;
+import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.ingredient.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
-package com.example.dream_of_refrigerator.domain.ingredient;
+package com.example.dream_of_refrigerator;
 
-import com.example.dream_of_refrigerator.domain.User;
+import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

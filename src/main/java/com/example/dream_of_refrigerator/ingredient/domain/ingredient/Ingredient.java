@@ -1,11 +1,9 @@
-package com.example.dream_of_refrigerator.domain.ingredient;
-import com.example.dream_of_refrigerator.domain.category.IngredientCategory;
-import com.example.dream_of_refrigerator.domain.image.IngredientImage;
-import com.fasterxml.jackson.annotation.JsonFormat;
+package com.example.dream_of_refrigerator.ingredient.domain.ingredient;
+import com.example.dream_of_refrigerator.ingredient.domain.category.IngredientCategory;
+import com.example.dream_of_refrigerator.ingredient.domain.image.IngredientImage;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity

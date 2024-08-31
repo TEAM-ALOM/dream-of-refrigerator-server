@@ -1,4 +1,4 @@
-package com.example.dream_of_refrigerator.domain.image;
+package com.example.dream_of_refrigerator.ingredient.domain.image;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

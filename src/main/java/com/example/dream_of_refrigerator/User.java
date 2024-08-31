@@ -1,4 +1,4 @@
-package com.example.dream_of_refrigerator.domain;
+package com.example.dream_of_refrigerator;
 
 import jakarta.persistence.*;
 import lombok.*;

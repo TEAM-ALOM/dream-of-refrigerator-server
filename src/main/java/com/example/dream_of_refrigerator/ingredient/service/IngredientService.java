@@ -1,7 +1,7 @@
-package com.example.dream_of_refrigerator.service;
+package com.example.dream_of_refrigerator.ingredient.service;
 
-import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
-import com.example.dream_of_refrigerator.repository.IngredientRepository;
+import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.ingredient.repository.IngredientRepository;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

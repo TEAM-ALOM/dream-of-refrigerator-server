@@ -1,4 +1,4 @@
-package com.example.dream_of_refrigerator.domain.category;
+package com.example.dream_of_refrigerator.ingredient.domain.category;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
