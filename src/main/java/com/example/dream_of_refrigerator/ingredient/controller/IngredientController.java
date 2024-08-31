@@ -36,4 +36,11 @@ public class IngredientController {
         return ResponseEntity.ok(ingredients);
     }
 
+    //재료 검색 기능
+    @GetMapping("/search")
+    public ResponseEntity<List<BasicIngredientDto>> searchIngredients(@RequestParam String query) {
+        List<BasicIngredientDto> ingredients = ingredientService.searchIngredients(query);
+        return ResponseEntity.ok(ingredients);
+    }
+
 }

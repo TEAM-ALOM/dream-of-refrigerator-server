@@ -5,7 +5,12 @@ import com.example.dream_of_refrigerator.ingredient.dto.BasicIngredientDto;
 import com.example.dream_of_refrigerator.ingredient.dto.DetailIngredientDto;
 import com.example.dream_of_refrigerator.ingredient.repository.IngredientRepository;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,6 +43,25 @@ public class IngredientService {
                         ingredient.isRefrigerated(),
                         ingredient.isFrozen()
                 ))
+                .collect(Collectors.toList());
+    }
+
+    //재료 검색
+    //재료 이름만 조회되어야 함
+    public List<BasicIngredientDto> searchIngredients(String searchTerm) {
+        // Specification 객체 생성
+        Specification<Ingredient> spec = new Specification<Ingredient>() {
+            @Override
+            public Predicate toPredicate(Root<Ingredient> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+                // 검색어를 소문자로 변환하여 이름 검색 조건 설정
+                String likePattern = "%" + searchTerm.toLowerCase() + "%";
+                return cb.like(cb.lower(root.get("name")), likePattern);
+            }
+        };
+
+        // 검색 조건에 따라 조회 및 DTO로 변환하여 반환
+        return ingredientRepository.findAll(spec).stream()
+                .map(ingredient -> new BasicIngredientDto(ingredient.getName()))
                 .collect(Collectors.toList());
     }
 
