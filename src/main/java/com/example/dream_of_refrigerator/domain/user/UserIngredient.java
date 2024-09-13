@@ -1,6 +1,7 @@
-package com.example.dream_of_refrigerator;
+package com.example.dream_of_refrigerator.domain.user;
 
-import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.domain.user.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +10,8 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Entity
+@Entity(name = "user_ingredient")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserIngredient {
@@ -19,15 +19,18 @@ public class UserIngredient {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient; // 어떤 재료인지 참조
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user; // 어떤 사용자의 재료인지 참조
 
-    private int quantity; // 보유한 수량
+    @Column(name = "quantity", columnDefinition = "int")
+    private Integer quantity; // 보유한 수량
+
     private LocalDate purchaseDate; // 구매 날짜
+
     private LocalDate expirationDate; // 유통기한
 }

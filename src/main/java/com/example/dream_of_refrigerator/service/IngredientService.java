@@ -1,9 +1,9 @@
-package com.example.dream_of_refrigerator.ingredient.service;
+package com.example.dream_of_refrigerator.service;
 
-import com.example.dream_of_refrigerator.ingredient.domain.ingredient.Ingredient;
-import com.example.dream_of_refrigerator.ingredient.dto.BasicIngredientDto;
-import com.example.dream_of_refrigerator.ingredient.dto.DetailIngredientDto;
-import com.example.dream_of_refrigerator.ingredient.repository.IngredientRepository;
+import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.dto.BasicIngredientDto;
+import com.example.dream_of_refrigerator.dto.DetailIngredientDto;
+import com.example.dream_of_refrigerator.repository.IngredientRepository;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -28,22 +28,24 @@ public class IngredientService {
     }
     //// -> 카테고리별 재료 조회
     public List<BasicIngredientDto> findByCategoryBasic(Long categoryId) {
-        return ingredientRepository.findByIngredientCategory_Id(categoryId).stream()
-                .map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
+//        return ingredientRepository.findByIngredientCategory_Id(categoryId).stream()
+//                .map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
+        return null;
     }
 
     //재료 상세 조회 페이지에서는 상세정보까지 모두 조회됨
     //재료 이름,냉장보관(ON/OFF), 냉동보관(ON/OFF) 조회되도록
     // UUID로 재료 상세 조회
     public List<DetailIngredientDto> findAllDetails(String ingredientUuid) {
-        return ingredientRepository.findByUuid(ingredientUuid).stream()
-                .map(ingredient -> new DetailIngredientDto(
-                        ingredient.getName(),
-                        ingredient.getIngredientCategory() != null ? ingredient.getIngredientCategory().getName() : "Unknown",
-                        ingredient.isRefrigerated(),
-                        ingredient.isFrozen()
-                ))
-                .collect(Collectors.toList());
+//        return ingredientRepository.findByUuid(ingredientUuid).stream()
+//                .map(ingredient -> new DetailIngredientDto(
+//                        ingredient.getName(),
+//                        ingredient.getIngredientCategory() != null ? ingredient.getIngredientCategory().getName() : "Unknown",
+//                        ingredient.isRefrigerated(),
+//                        ingredient.isFrozen()
+//                ))
+//                .collect(Collectors.toList());
+        return null;
     }
 
     //재료 검색
