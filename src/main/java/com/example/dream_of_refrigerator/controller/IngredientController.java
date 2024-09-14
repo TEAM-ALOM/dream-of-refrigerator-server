@@ -14,32 +14,33 @@ import java.util.List;
 public class IngredientController {
     private final IngredientService ingredientService;
     //모든 재료 조회(Ingredient table에 저장된 모든 것 전체 조회)
-    @GetMapping
+    @GetMapping//재료 name만 반환 (BasicIngredientDto)
     public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
         List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
     }
 
-    //카테고리별 재료 조회(Ingredient table에서 ingredientCategory가 같은 것끼리 조회)
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<BasicIngredientDto>> getIngredientsByCategoryBasic(@PathVariable Long categoryId) {
-        List<BasicIngredientDto> ingredients = ingredientService.findByCategoryBasic(categoryId);
+    //카테고리별 재료 조회
+    @GetMapping("/category/{category}")//재료 name만 반환 (BasicIngredientDto)
+    public ResponseEntity<List<BasicIngredientDto>> getIngredientsByCategory(@PathVariable String category) {
+        List<BasicIngredientDto> ingredients = ingredientService.findByCategory(category);
         return ResponseEntity.ok(ingredients);
     }
 
-    // 재료 정보 상세조회
-    // UUID로 재료 상세 조회
-    @GetMapping("/{ingredientUuid}")
-    public ResponseEntity<List<DetailIngredientDto>> getIngredientDetailsByUuid(@PathVariable String ingredientUuid) {
-        List<DetailIngredientDto> ingredients = ingredientService.findAllDetails(ingredientUuid);
-        return ResponseEntity.ok(ingredients);
-    }
-
-    //재료 검색 기능
+    //재료 검색
     @GetMapping("/search")
     public ResponseEntity<List<BasicIngredientDto>> searchIngredients(@RequestParam String query) {
         List<BasicIngredientDto> ingredients = ingredientService.searchIngredients(query);
         return ResponseEntity.ok(ingredients);
     }
+
+    // 재료 정보 상세조회
+/*
+    @GetMapping("/{ingredientUuid}")
+    public ResponseEntity<List<DetailIngredientDto>> getIngredientDetailsByUuid(@PathVariable String ingredientUuid) {
+        List<DetailIngredientDto> ingredients = ingredientService.findAllDetails(ingredientUuid);
+        return ResponseEntity.ok(ingredients);
+    }
+*/
 
 }

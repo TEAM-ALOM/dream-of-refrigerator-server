@@ -20,17 +20,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
-    //Home, 재료 검색 페이지 등에선 재료 조회 시 재료이름,재료아이콘만 조회됨
-    //// -> 모든 재료 조회 (기본 전체 조회)
+
+    // -> 모든 재료 조회 (기본 전체 조회)
     public List<BasicIngredientDto> findAllBasic() {
         return ingredientRepository.findAll().stream()
                 .map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
     }
-    //// -> 카테고리별 재료 조회
-    public List<BasicIngredientDto> findByCategoryBasic(Long categoryId) {
-//        return ingredientRepository.findByIngredientCategory_Id(categoryId).stream()
-//                .map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
-        return null;
+    // -> 카테고리별 재료 조회
+    public List<BasicIngredientDto> findByCategory(String category) {
+        return ingredientRepository.findByCategory(category).
+                stream().map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
+    }
+
+    //재료 검색 (검색한 단어 들어간 모든 재료)
+    public List<BasicIngredientDto> searchIngredients(String searchTerm) {
+        // Specification 객체 생성
+        Specification<Ingredient> spec = (root, query, criteriaBuilder) -> {
+            String likePattern = "%" + searchTerm + "%";
+            return criteriaBuilder.like(root.get("name"), likePattern);
+        };
+
+        // 검색 조건에 따라 조회 및 DTO로 변환하여 반환
+        return ingredientRepository.findAll(spec).stream()
+                .map(ingredient -> new BasicIngredientDto(ingredient.getName()))
+                .collect(Collectors.toList());
     }
 
     //재료 상세 조회 페이지에서는 상세정보까지 모두 조회됨
@@ -46,25 +59,6 @@ public class IngredientService {
 //                ))
 //                .collect(Collectors.toList());
         return null;
-    }
-
-    //재료 검색
-    //재료 이름만 조회되어야 함
-    public List<BasicIngredientDto> searchIngredients(String searchTerm) {
-        // Specification 객체 생성
-        Specification<Ingredient> spec = new Specification<Ingredient>() {
-            @Override
-            public Predicate toPredicate(Root<Ingredient> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                // 검색어를 소문자로 변환하여 이름 검색 조건 설정
-                String likePattern = "%" + searchTerm.toLowerCase() + "%";
-                return cb.like(cb.lower(root.get("name")), likePattern);
-            }
-        };
-
-        // 검색 조건에 따라 조회 및 DTO로 변환하여 반환
-        return ingredientRepository.findAll(spec).stream()
-                .map(ingredient -> new BasicIngredientDto(ingredient.getName()))
-                .collect(Collectors.toList());
     }
 
 }
