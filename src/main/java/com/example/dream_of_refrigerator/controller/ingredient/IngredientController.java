@@ -1,8 +1,7 @@
-package com.example.dream_of_refrigerator.controller;
+package com.example.dream_of_refrigerator.controller.ingredient;
 
-import com.example.dream_of_refrigerator.dto.BasicIngredientDto;
-import com.example.dream_of_refrigerator.dto.DetailIngredientDto;
-import com.example.dream_of_refrigerator.service.IngredientService;
+import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
+import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
