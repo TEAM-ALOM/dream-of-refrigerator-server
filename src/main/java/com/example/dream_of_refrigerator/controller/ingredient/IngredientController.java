@@ -1,6 +1,8 @@
 package com.example.dream_of_refrigerator.controller.ingredient;
 
+import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.UserIngredientDto;
 import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,14 @@ public class IngredientController {
     public ResponseEntity<List<BasicIngredientDto>> searchIngredients(@RequestParam String query) {
         List<BasicIngredientDto> ingredients = ingredientService.searchIngredients(query);
         return ResponseEntity.ok(ingredients);
+    }
+
+    //재료 등록
+    @PostMapping("/{ingredientId}")
+    public ResponseEntity<UserIngredientDto> registerIngredients(@PathVariable("ingredientId") Long ingredientId,
+                                                                 @RequestBody UserIngredientDto userIngredientDto){
+        UserIngredient userIngredient=ingredientService.registerIngredients(ingredientId,userIngredientDto);
+        return  ResponseEntity.ok(userIngredient.toDto());
     }
 
     // 재료 정보 상세조회

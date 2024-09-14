@@ -2,11 +2,9 @@ package com.example.dream_of_refrigerator.domain.user;
 
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.user.User;
+import com.example.dream_of_refrigerator.dto.ingredient.UserIngredientDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 
@@ -33,4 +31,24 @@ public class UserIngredient {
     private LocalDate purchaseDate; // 구매 날짜
 
     private LocalDate expirationDate; // 유통기한
+
+    @Builder
+    public UserIngredient(Ingredient ingredient, User user, Integer quantity, LocalDate purchaseDate, LocalDate expirationDate) {
+        this.ingredient = ingredient;
+        this.user = user;
+        this.quantity = quantity;
+        this.purchaseDate = (purchaseDate != null) ? purchaseDate : LocalDate.now(); // 기본값 설정
+        this.expirationDate = expirationDate;
+    }
+    public UserIngredientDto toDto() {
+        return new UserIngredientDto(
+                user.getId(),
+                ingredient.getId(),
+                ingredient.getCategory(),
+                quantity,
+                purchaseDate,
+                expirationDate,
+                ingredient.getIsFrozen(),
+                ingredient.getIsRefrigerated());
+    }
 }

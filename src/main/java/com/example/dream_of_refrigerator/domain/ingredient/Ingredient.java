@@ -35,6 +35,14 @@ public class Ingredient {
 
     @OneToMany(mappedBy = "ingredient")
     private List<IngredientRecipe> ingredientRecipes;
+
+    public void setIsFrozen(Boolean tf) {
+        this.isFrozen=tf;
+    }
+
+    public void setIsRefrigerated(Boolean tf) {
+        this.isRefrigerated=tf;
+    }
     /*
     long과 Long의 차이
     long : 원시타입 (null할당 불가능)

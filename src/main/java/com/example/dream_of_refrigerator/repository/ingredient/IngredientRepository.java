@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient,String>, JpaSpecificationExecutor<Ingredient> {
     List<Ingredient> findByCategory(String category);
+    Ingredient findById(Long id);
 
 }
