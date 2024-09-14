@@ -43,15 +43,4 @@ public class IngredientController {
         return  ResponseEntity.ok(userIngredient.toDto());
     }
 
-
-
-    // 재료 정보 상세조회
-/*
-    @GetMapping("/{ingredientUuid}")
-    public ResponseEntity<List<DetailIngredientDto>> getIngredientDetailsByUuid(@PathVariable String ingredientUuid) {
-        List<DetailIngredientDto> ingredients = ingredientService.findAllDetails(ingredientUuid);
-        return ResponseEntity.ok(ingredients);
-    }
-*/
-
 }
