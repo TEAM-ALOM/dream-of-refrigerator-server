@@ -1,8 +1,7 @@
 package com.example.dream_of_refrigerator.domain.user;
 
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
-import com.example.dream_of_refrigerator.domain.user.User;
-import com.example.dream_of_refrigerator.dto.ingredient.UserIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,8 +39,8 @@ public class UserIngredient {
         this.purchaseDate = (purchaseDate != null) ? purchaseDate : LocalDate.now(); // 기본값 설정
         this.expirationDate = expirationDate;
     }
-    public UserIngredientDto toDto() {
-        return new UserIngredientDto(
+    public UserIngredientRequestDto toDto() {
+        return new UserIngredientRequestDto(
                 user.getId(),
                 ingredient.getId(),
                 ingredient.getCategory(),

@@ -5,7 +5,7 @@ import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.DetailIngredientDto;
-import com.example.dream_of_refrigerator.dto.ingredient.UserIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,8 +27,6 @@ public class IngredientService {
 
     // -> 모든 재료 조회 (기본 전체 조회)
     public List<BasicIngredientDto> findAllBasic() {
-        List<Ingredient> ingredients = ingredientRepository.findAll();
-        System.out.println(ingredients); // 확인을 위한 로그 출력
         return ingredientRepository.findAll().stream()
                 .map(ingredient -> new BasicIngredientDto(ingredient.getName())).collect(Collectors.toList());
     }
@@ -52,22 +49,22 @@ public class IngredientService {
                 .map(ingredient -> new BasicIngredientDto(ingredient.getName()))
                 .collect(Collectors.toList());
     }
-    public UserIngredient registerIngredients(Long ingredientId, UserIngredientDto userIngredientDto) {
+    public UserIngredient registerIngredients(Long ingredientId, UserIngredientRequestDto userIngredientRequestDto) {
         //재료를 등록하려고 하는 user
-        User user = userRepository.findById(userIngredientDto.UserId())
+        User user = userRepository.findById(userIngredientRequestDto.UserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         //등록하려는 ingredient
         Ingredient registerIngredient = ingredientRepository.findById(ingredientId);
         // 보관 방법 설정 (냉장,냉동)
-        registerIngredient.setIsRefrigerated(userIngredientDto.isRefrigerated());
-        registerIngredient.setIsFrozen(userIngredientDto.isFrozen());
+        registerIngredient.setIsRefrigerated(userIngredientRequestDto.isRefrigerated());
+        registerIngredient.setIsFrozen(userIngredientRequestDto.isFrozen());
         //등록하기
         UserIngredient userIngredient = UserIngredient.builder()
                 .user(user)
                 .ingredient(registerIngredient)
                 .purchaseDate(LocalDate.now())  //추가 날짜를 구매 날짜로 설정
-                .expirationDate(userIngredientDto.expiredDate()) //유통기한 설정
-                .quantity(userIngredientDto.quantity()) //개수 설정
+                .expirationDate(userIngredientRequestDto.expiredDate()) //유통기한 설정
+                .quantity(userIngredientRequestDto.quantity()) //개수 설정
                 .build();
 
         UserIngredient registeredIngredient = userIngredientRepository.save(userIngredient);
