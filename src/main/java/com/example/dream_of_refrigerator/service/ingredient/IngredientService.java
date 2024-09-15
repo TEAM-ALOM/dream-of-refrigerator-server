@@ -1,14 +1,10 @@
-package com.example.dream_of_refrigerator.service;
+package com.example.dream_of_refrigerator.service.ingredient;
 
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
-import com.example.dream_of_refrigerator.dto.BasicIngredientDto;
-import com.example.dream_of_refrigerator.dto.DetailIngredientDto;
-import com.example.dream_of_refrigerator.repository.IngredientRepository;
+import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.DetailIngredientDto;
+import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;

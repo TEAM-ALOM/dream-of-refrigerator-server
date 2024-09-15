@@ -1,12 +1,11 @@
 package com.example.dream_of_refrigerator.domain.recipe;
 
+import com.example.dream_of_refrigerator.domain.user.Favorite;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity(name = "recipe")
@@ -14,6 +13,7 @@ import java.util.Set;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Recipe {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,10 +26,14 @@ public class Recipe {
     @Column(name = "thumbnail", columnDefinition = "TEXT")
     private String thumbnail;
 
+    @OneToMany(mappedBy = "recipe")
+    @Builder.Default
+    private Set<RecipeDetail> recipeDetails = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "recipe")
-    private Set<RecipeDetail> recipeDetails;
+    @Builder.Default
+    private Set<IngredientRecipe> ingredientRecipes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "recipe")
-    private Set<IngredientRecipe> ingredientRecipes;
+    private Set<Favorite> favorites;
 }
