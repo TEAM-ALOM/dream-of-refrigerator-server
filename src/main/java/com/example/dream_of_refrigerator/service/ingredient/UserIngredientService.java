@@ -3,7 +3,6 @@ package com.example.dream_of_refrigerator.service.ingredient;
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
-import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
@@ -67,28 +66,8 @@ public class UserIngredientService {
                 userIngredient.getQuantity(),
                 userIngredient.getPurchaseDate(),
                 userIngredient.getExpirationDate(),
-                ingredient.getIsFrozen(),
-                ingredient.getIsRefrigerated()
+                userIngredient.getIsFrozen(),
+                userIngredient.getIsRefrigerated()
         );
-
     }
-
-//    public UserIngredient update(Long ingredientId, Long userIngredientId, UserIngredientRequestDto userIngredientRequestDto) {
-//        // 수정하려는 userIngredient를 조회
-//        UserIngredient userIngredient = userIngredientRepository.findById(userIngredientId)
-//                .orElseThrow(() -> new IllegalArgumentException("해당 재료 정보를 찾을 수 없습니다."));
-//
-//        // 재료 정보 수정 여부 확인
-//        Ingredient registerIngredient = ingredientRepository.findById(ingredientId)
-//        registerIngredient.setIsRefrigerated(userIngredientRequestDto.isRefrigerated());  // 냉장 여부 수정
-//        registerIngredient.setIsFrozen(userIngredientRequestDto.isFrozen());  // 냉동 여부 수정
-//
-//        // UserIngredient 정보 수정
-//        userIngredient.setIngredient(registerIngredient);  // 재료 수정
-//        userIngredient.setQuantity(userIngredientRequestDto.quantity());  // 수량 수정
-//        userIngredient.setExpirationDate(userIngredientRequestDto.expiredDate());  // 유통기한 수정
-//
-//        // 수정한 UserIngredient를 저장
-//        return userIngredientRepository.save(userIngredient);
-//    }
 }

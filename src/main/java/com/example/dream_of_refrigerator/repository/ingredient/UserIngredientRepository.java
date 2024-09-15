@@ -10,4 +10,6 @@ import java.util.Optional;
 public interface UserIngredientRepository extends JpaRepository<UserIngredient,Long> {
     List<UserIngredient> findByUser(User user);
     Optional<UserIngredient> findByUserAndIngredientId(User user, Long ingredientId);
+
+    Optional<UserIngredient> findById(Long ingredientId);
 }

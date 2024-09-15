@@ -24,25 +24,11 @@ public class Ingredient {
     @Column(nullable = false)
     private String name;    //재료 이름
 
-    // 보관 방법 (냉장, 냉동)
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean isRefrigerated; // 냉장 보관 여부(기본값 false 0)
-
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean isFrozen; // 냉동 보관 여부(기본값 false 0)
 
     @OneToMany(mappedBy = "ingredient")
     private List<IngredientRecipe> ingredientRecipes;
 
-    public void setIsFrozen(Boolean tf) {
-        this.isFrozen=tf;
-    }
 
-    public void setIsRefrigerated(Boolean tf) {
-        this.isRefrigerated=tf;
-    }
     /*
     long과 Long의 차이
     long : 원시타입 (null할당 불가능)

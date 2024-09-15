@@ -6,5 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor //기본생성자
 public class BasicIngredientDto {
+    private Long id;
     private String name;
 }

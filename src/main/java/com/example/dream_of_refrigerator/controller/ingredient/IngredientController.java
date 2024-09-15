@@ -15,7 +15,7 @@ import java.util.List;
 public class IngredientController {
     private final IngredientService ingredientService;
     //모든 재료 조회(Ingredient table에 저장된 모든 것 전체 조회)
-    @GetMapping//재료 name만 반환 (BasicIngredientDto)
+    @GetMapping//재료 id,name 반환 (BasicIngredientDto)
     public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
         List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
@@ -36,11 +36,11 @@ public class IngredientController {
     }
 
     //재료 등록(재료 검색 페이지에서 특정 재료 클릭할 경우 실행)
-    @PostMapping("/{ingredientId}")
-    public ResponseEntity<UserIngredientRequestDto> registerIngredients(@PathVariable("ingredientId") Long ingredientId,
-                                                                        @RequestBody UserIngredientRequestDto userIngredientRequestDto){
-        UserIngredient userIngredient=ingredientService.registerIngredients(ingredientId, userIngredientRequestDto);
-        return  ResponseEntity.ok(userIngredient.toDto());
+    @PostMapping("/send")   //선택 완료버튼 눌러서 보내기
+    public ResponseEntity<List<UserIngredient>> registerIngredients(
+            @RequestBody List<UserIngredientRequestDto> userIngredientRequestDtos){
+        List<UserIngredient> userIngredients=ingredientService.register(userIngredientRequestDtos);
+        return  ResponseEntity.ok(userIngredients);
     }
 
 }

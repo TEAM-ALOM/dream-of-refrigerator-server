@@ -1,6 +1,5 @@
 package com.example.dream_of_refrigerator.controller.ingredient;
 
-import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
 import com.example.dream_of_refrigerator.service.ingredient.UserIngredientService;
