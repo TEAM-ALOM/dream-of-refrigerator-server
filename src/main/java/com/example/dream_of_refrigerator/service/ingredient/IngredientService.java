@@ -11,12 +11,15 @@ import com.example.dream_of_refrigerator.repository.ingredient.IngredientReposit
 
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
 import com.example.dream_of_refrigerator.repository.user.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -27,15 +30,18 @@ public class IngredientService {
     private final UserRepository userRepository;
     private final UserIngredientRepository userIngredientRepository;
 
+
     // -> 모든 재료 조회 (기본 전체 조회)
     public List<BasicIngredientDto> findAllBasic() {
         return ingredientRepository.findAll().stream()
                 .map(ingredient -> new BasicIngredientDto(ingredient.getId(),ingredient.getName())).collect(Collectors.toList());
+
     }
     // -> 카테고리별 재료 조회
     public List<BasicIngredientDto> findByCategory(String category) {
         return ingredientRepository.findByCategory(category).
                 stream().map(ingredient -> new BasicIngredientDto(ingredient.getId(),ingredient.getName())).collect(Collectors.toList());
+
     }
 
     //재료 검색 (검색한 단어 들어간 모든 재료)
@@ -53,19 +59,28 @@ public class IngredientService {
     }
 
     //재료 등록
+    // 재료 등록 (중복 방지 기능 포함)
     public List<UserIngredient> register(List<UserIngredientRequestDto> userIngredientRequestDtos) {
-        User user = userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));   //일단 이렇게 넣어둠
-        //String email = JwtUtils.getEmail();
-        //User user = userRepository.findByEmail(email)
-        //        .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니다."));
-
+        User user = userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")); // 임시로 User ID 설정
         List<UserIngredient> userIngredients = userIngredientRequestDtos.stream()
                 .map(requestDto -> {
-                    Ingredient registerIngredient = ingredientRepository.findById(requestDto.ingredientId());
-                    //        .orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없습니다."));
-                    //Entity로 변환
-                    return new UserIngredient(registerIngredient,user, requestDto.quantity(), requestDto.purchaseDate(), requestDto.expiredDate(), requestDto.isRefrigerated(), requestDto.isFrozen());
+                    // 재료 찾기
+                    Ingredient registerIngredient = ingredientRepository.findById(requestDto.ingredientId())
+                            .orElseThrow(() -> new IllegalArgumentException("재료를 찾을 수 없습니다."));
+
+                    // 중복 여부 확인
+                    Optional<UserIngredient> existingIngredient = userIngredientRepository.findByUserAndIngredient(user, registerIngredient);
+                    if (existingIngredient.isPresent()) {
+                        // 이미 등록된 재료가 있을 경우, 해당 재료를 건너뜀
+                        return null;
+                    }
+
+                    // 새로운 재료 등록
+                    return new UserIngredient(registerIngredient, user, requestDto.quantity(),
+                            requestDto.purchaseDate(), requestDto.expiredDate(),
+                            requestDto.isRefrigerated(), requestDto.isFrozen());
                 })
+                .filter(Objects::nonNull) // null 값 제거 (이미 등록된 재료는 null로 반환되므로)
                 .collect(Collectors.toList());
 
         return userIngredientRepository.saveAll(userIngredients);

@@ -7,10 +7,11 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient,String>, JpaSpecificationExecutor<Ingredient> {
     List<Ingredient> findByCategory(String category);
-    Ingredient findById(Long id);
+    Optional<Ingredient> findById(Long id);
 
 }

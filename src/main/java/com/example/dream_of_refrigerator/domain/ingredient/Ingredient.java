@@ -1,11 +1,14 @@
 package com.example.dream_of_refrigerator.domain.ingredient;
 
 import com.example.dream_of_refrigerator.domain.recipe.IngredientRecipe;
+import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity(name = "ingredient")
@@ -13,6 +16,7 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +29,10 @@ public class Ingredient {
     private String name;    //재료 이름
 
 
-    @OneToMany(mappedBy = "ingredient")
-    private List<IngredientRecipe> ingredientRecipes;
 
+    @OneToMany(mappedBy = "ingredient")
+    @Builder.Default
+    private Set<UserIngredient> userIngredients = new LinkedHashSet<>();
 
     /*
     long과 Long의 차이
@@ -36,3 +41,5 @@ public class Ingredient {
     */
 
 }
+//@Builder.Default
+//private Set<IngredientRecipe> ingredientRecipes = new LinkedHashSet<>();
