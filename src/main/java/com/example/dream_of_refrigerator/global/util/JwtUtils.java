@@ -33,26 +33,14 @@ public class JwtUtils {
     }
 
     public static String generateAccessToken(String userId, List<String> roles){
+        return Jwts.builder()
+                .setSubject(userId)
+                .claim("roles", roles)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
+                .compact();
 
-        // TODO : 나중에 통합
-        if (roles.contains("ROLE_ADMIN")){
-            return Jwts.builder()
-                    .setSubject(userId)
-                    .claim("roles", roles)
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + 9999999999L))
-                    .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
-                    .compact();
-        }
-        else {
-            return Jwts.builder()
-                    .setSubject(userId)
-                    .claim("roles", roles)
-                    .setIssuedAt(new Date(System.currentTimeMillis()))
-                    .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
-                    .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
-                    .compact();
-        }
     }
     public static String generateRefreshToken(String userId){
         return Jwts.builder()
@@ -94,9 +82,9 @@ public class JwtUtils {
     public static String getEmail(){
         String accessToken = JwtUtils.getAccessToken();
         Claims body = JwtUtils.parseClaims(accessToken);
-        String userId = body.get("sub", String.class);
+        String email = body.get("sub", String.class);
 
-        return userId;
+        return email;
     }
     public static String getAccessToken(){
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();

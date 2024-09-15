@@ -7,10 +7,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 
 @Getter
@@ -38,8 +35,10 @@ public class User implements UserDetails {
     private String refreshToken;
     // 조회용 양방향 매핑
     @OneToMany(mappedBy = "user")
-    private List<Favorite> favorites;
+    private Set<Favorite> favorites;
 
+    @OneToMany(mappedBy = "user")
+    private Set<UserIngredient> userIngredients;
     public void setRole(){
         if(this.role == null) this.role= "ROLE_USER";
     }
