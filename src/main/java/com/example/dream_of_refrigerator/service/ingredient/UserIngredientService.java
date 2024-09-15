@@ -3,6 +3,7 @@ package com.example.dream_of_refrigerator.service.ingredient;
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
@@ -10,10 +11,10 @@ import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRep
 import com.example.dream_of_refrigerator.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.time.Duration;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,11 +33,14 @@ public class UserIngredientService {
     public List<UserIngredientResponseDto> findAll(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+        LocalDate today = LocalDate.now();  // 현재 날짜
+
         return userIngredientRepository.findByUser(user).stream()
+                // 현재 날짜와 유통기한의 차이를 계산하여 정렬
                 .sorted(Comparator.comparingLong(userIngredient ->
-                        Duration.between(userIngredient.getPurchaseDate().atStartOfDay(),
-                                userIngredient.getExpirationDate().atStartOfDay()).toDays()))
+                        ChronoUnit.DAYS.between(today, userIngredient.getExpirationDate())))
                 .map(userIngredient -> new UserIngredientResponseDto(
+                        userIngredient.getIngredient().getId(),
                         userIngredient.getIngredient().getName()))
                 .collect(Collectors.toList());
     }
@@ -69,5 +73,6 @@ public class UserIngredientService {
                 userIngredient.getIsFrozen(),
                 userIngredient.getIsRefrigerated()
         );
+
     }
 }
