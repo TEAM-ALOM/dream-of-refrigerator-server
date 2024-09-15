@@ -1,11 +1,13 @@
 package com.example.dream_of_refrigerator.service.ingredient;
 
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
+import com.example.dream_of_refrigerator.domain.recipe.Recipe;
 import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
+import com.example.dream_of_refrigerator.global.util.JwtUtils;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
 import com.example.dream_of_refrigerator.repository.user.UserRepository;
@@ -30,8 +32,9 @@ public class UserIngredientService {
     }
 
     //사용자 냉장고에 있는 재료를 (expiration_date - purchase_date)의 차이가 짧은 순서로 정렬하여 조회
-    public List<UserIngredientResponseDto> findAll(Long userId) {
-        User user = userRepository.findById(userId)
+    public List<UserIngredientResponseDto> findAll() {
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         LocalDate today = LocalDate.now();  // 현재 날짜
 
@@ -45,17 +48,16 @@ public class UserIngredientService {
                 .collect(Collectors.toList());
     }
 
-    public String findUserNickname(Long userId) {//{nickname}의 냉장고
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+    public String findUserNickname() {//{nickname}의 냉장고
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         return user.getNickname();
     }
 
-    public UserIngredientDetailResponseDto findDetail(Long userId, Long ingredientId) {
+    public UserIngredientDetailResponseDto findDetail(Long ingredientId) {
         // 사용자 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
-
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         // 사용자의 재료 조회
         UserIngredient userIngredient = userIngredientRepository.findByUserAndIngredientId(user, ingredientId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
@@ -76,10 +78,10 @@ public class UserIngredientService {
     }
 
     // 재료 정보 수정
-    public UserIngredientDetailResponseDto edit(Long userId, Long ingredientId, UserIngredientRequestDto requestDto) {
+    public UserIngredientDetailResponseDto edit(Long ingredientId, UserIngredientRequestDto requestDto) {
         // 사용자 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
 
         // 사용자의 재료 조회
         UserIngredient userIngredient = userIngredientRepository.findByUserAndIngredientId(user, ingredientId)
@@ -118,10 +120,10 @@ public class UserIngredientService {
     }
 
     // 재료 삭제
-    public void delete(Long userId, Long ingredientId) {
+    public void delete(Long ingredientId) {
         // 사용자 조회
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
 
         // 사용자의 재료 조회
         UserIngredient userIngredient = userIngredientRepository.findByUserAndIngredientId(user, ingredientId)

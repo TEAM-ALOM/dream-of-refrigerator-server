@@ -1,4 +1,4 @@
-package com.example.dream_of_refrigerator.dto.ingredient;
+package com.example.dream_of_refrigerator.dto.ingredient.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

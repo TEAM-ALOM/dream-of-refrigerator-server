@@ -3,8 +3,7 @@ package com.example.dream_of_refrigerator.service.ingredient;
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
-import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
-import com.example.dream_of_refrigerator.dto.ingredient.DetailIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.global.util.JwtUtils;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
@@ -17,7 +16,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -61,7 +59,9 @@ public class IngredientService {
     //재료 등록
     // 재료 등록 (중복 방지 기능 포함)
     public List<UserIngredient> register(List<UserIngredientRequestDto> userIngredientRequestDtos) {
-        User user = userRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다.")); // 임시로 User ID 설정
+        String email = JwtUtils.getEmail();
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("계정이 존재하지 않습니다."));
         List<UserIngredient> userIngredients = userIngredientRequestDtos.stream()
                 .map(requestDto -> {
                     // 재료 찾기

@@ -53,7 +53,7 @@ public class UserIngredient {
     }
     public UserIngredientRequestDto toDto() {
         return new UserIngredientRequestDto(
-                user.getId(),
+                //user.getId(),
                 ingredient.getId(),
                 ingredient.getCategory(),
                 quantity,

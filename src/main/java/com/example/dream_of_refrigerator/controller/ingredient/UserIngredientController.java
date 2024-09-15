@@ -11,46 +11,43 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/refrigerator/{userId}")
+@RequestMapping("/api/refrigerator")
 @RequiredArgsConstructor
 public class UserIngredientController {
     private final UserIngredientService userIngredientService;
     //{nickname}의 냉장고의 nickname조회
     @GetMapping("/nickname")
-    public ResponseEntity<String> getUserNickname(@PathVariable("userId") Long userId) {
-        String userNickname = userIngredientService.findUserNickname(userId);
+    public ResponseEntity<String> getUserNickname() {
+        String userNickname = userIngredientService.findUserNickname();
         return ResponseEntity.ok(userNickname);
     }
 
     //냉장고에 있는 모든 재료 조회 (expiration_date - purchase_date)의 차이가 짧은 순서로 정렬하여 조회
-    @GetMapping("/userIngredient")//정렬 기능 넣어야 함, 이름만 조회
-    public ResponseEntity<List<UserIngredientResponseDto>> getAllUserIngredient(@PathVariable("userId")Long userId) {
-        List<UserIngredientResponseDto> userIngredients = userIngredientService.findAll(userId);
+    @GetMapping("/userIngredient")
+    public ResponseEntity<List<UserIngredientResponseDto>> getAllUserIngredient() {
+        List<UserIngredientResponseDto> userIngredients = userIngredientService.findAll();
         return ResponseEntity.ok(userIngredients);
     }
 
     //냉장고에 있는 특정 재료 상세 조회
     @GetMapping("userIngredient/{ingredientId}")
-    public ResponseEntity<UserIngredientDetailResponseDto> getDetailUserIngredient(@PathVariable("userId")Long userId,
-                                                                                    @PathVariable("ingredientId")Long ingredientId){
-        UserIngredientDetailResponseDto detailIngredient=userIngredientService.findDetail(userId,ingredientId);
+    public ResponseEntity<UserIngredientDetailResponseDto> getDetailUserIngredient(@PathVariable("ingredientId")Long ingredientId){
+        UserIngredientDetailResponseDto detailIngredient=userIngredientService.findDetail(ingredientId);
         return ResponseEntity.ok(detailIngredient);
     }
 
     // 냉장고에 있는 특정 재료 정보 수정
     @PatchMapping("userIngredient/{ingredientId}")
     public ResponseEntity<UserIngredientDetailResponseDto> editUserIngredient(
-            @PathVariable("userId") Long userId,
             @PathVariable("ingredientId") Long ingredientId,
             @RequestBody UserIngredientRequestDto requestDto) {
-        UserIngredientDetailResponseDto detailIngredient = userIngredientService.edit(userId, ingredientId, requestDto);
+        UserIngredientDetailResponseDto detailIngredient = userIngredientService.edit(ingredientId, requestDto);
         return ResponseEntity.ok(detailIngredient);
     }
     // 냉장고에 있는 특정 재료 삭제
     @DeleteMapping("userIngredient/{ingredientId}")
-    public ResponseEntity<Void> deleteUserIngredient(@PathVariable("userId") Long userId,
-                                                     @PathVariable("ingredientId") Long ingredientId) {
-        userIngredientService.delete(userId, ingredientId);
+    public ResponseEntity<Void> deleteUserIngredient(@PathVariable("ingredientId") Long ingredientId) {
+        userIngredientService.delete(ingredientId);
         return ResponseEntity.noContent().build();  // 성공적으로 삭제된 경우 204 응답
     }
 }
