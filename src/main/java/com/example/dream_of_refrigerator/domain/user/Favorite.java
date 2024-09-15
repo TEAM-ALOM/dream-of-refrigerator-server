@@ -3,6 +3,7 @@ package com.example.dream_of_refrigerator.domain.user;
 import com.example.dream_of_refrigerator.domain.recipe.Recipe;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "favorite")
+@Builder
 public class Favorite {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

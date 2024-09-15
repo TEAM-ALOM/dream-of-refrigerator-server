@@ -24,4 +24,6 @@ public class IngredientRecipe {
     @ManyToOne
     @JoinColumn(name = "ingredient_id")
     private Ingredient ingredient;
+
+
 }

@@ -1,4 +1,4 @@
-package com.example.dream_of_refrigerator.repository;
+package com.example.dream_of_refrigerator.repository.ingredient;
 
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
