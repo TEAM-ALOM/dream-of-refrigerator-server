@@ -73,6 +73,61 @@ public class UserIngredientService {
                 userIngredient.getIsFrozen(),
                 userIngredient.getIsRefrigerated()
         );
+    }
 
+    // 재료 정보 수정
+    public UserIngredientDetailResponseDto edit(Long userId, Long ingredientId, UserIngredientRequestDto requestDto) {
+        // 사용자 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+
+        // 사용자의 재료 조회
+        UserIngredient userIngredient = userIngredientRepository.findByUserAndIngredientId(user, ingredientId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
+
+        // 수정할 필드 적용 (수정할 값이 존재하면 수정)
+        if (requestDto.quantity() != null) {
+            userIngredient.setQuantity(requestDto.quantity());
+        }
+        if(requestDto.purchaseDate()!=null){
+            userIngredient.setPurchaseDate(requestDto.purchaseDate());
+        }
+        if (requestDto.expiredDate() != null) {
+            userIngredient.setExpirationDate(requestDto.expiredDate());
+        }
+        if (requestDto.isFrozen() != null) {
+            userIngredient.setIsFrozen(requestDto.isFrozen());
+        }
+        if (requestDto.isRefrigerated() != null) {
+            userIngredient.setIsRefrigerated(requestDto.isRefrigerated());
+        }
+
+        // 저장
+        userIngredientRepository.save(userIngredient);
+
+        // 수정된 정보를 DTO로 변환하여 반환
+        return new UserIngredientDetailResponseDto(
+                userIngredient.getIngredient().getName(),
+                userIngredient.getIngredient().getCategory(),
+                userIngredient.getQuantity(),
+                userIngredient.getPurchaseDate(),
+                userIngredient.getExpirationDate(),
+                userIngredient.getIsFrozen(),
+                userIngredient.getIsRefrigerated()
+        );
+    }
+
+    // 재료 삭제
+    public void delete(Long userId, Long ingredientId) {
+        // 사용자 조회
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+
+        // 사용자의 재료 조회
+        UserIngredient userIngredient = userIngredientRepository.findByUserAndIngredientId(user, ingredientId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 재료를 찾을 수 없습니다."));
+
+        // 재료 삭제
+        userIngredientRepository.delete(userIngredient);
     }
 }

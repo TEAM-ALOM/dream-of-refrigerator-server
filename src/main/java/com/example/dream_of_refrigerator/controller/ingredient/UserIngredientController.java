@@ -1,5 +1,6 @@
 package com.example.dream_of_refrigerator.controller.ingredient;
 
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
 import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
 import com.example.dream_of_refrigerator.service.ingredient.UserIngredientService;
@@ -34,5 +35,22 @@ public class UserIngredientController {
                                                                                     @PathVariable("ingredientId")Long ingredientId){
         UserIngredientDetailResponseDto detailIngredient=userIngredientService.findDetail(userId,ingredientId);
         return ResponseEntity.ok(detailIngredient);
+    }
+
+    // 냉장고에 있는 특정 재료 정보 수정
+    @PatchMapping("userIngredient/{ingredientId}")
+    public ResponseEntity<UserIngredientDetailResponseDto> editUserIngredient(
+            @PathVariable("userId") Long userId,
+            @PathVariable("ingredientId") Long ingredientId,
+            @RequestBody UserIngredientRequestDto requestDto) {
+        UserIngredientDetailResponseDto detailIngredient = userIngredientService.edit(userId, ingredientId, requestDto);
+        return ResponseEntity.ok(detailIngredient);
+    }
+    // 냉장고에 있는 특정 재료 삭제
+    @DeleteMapping("userIngredient/{ingredientId}")
+    public ResponseEntity<Void> deleteUserIngredient(@PathVariable("userId") Long userId,
+                                                     @PathVariable("ingredientId") Long ingredientId) {
+        userIngredientService.delete(userId, ingredientId);
+        return ResponseEntity.noContent().build();  // 성공적으로 삭제된 경우 204 응답
     }
 }
