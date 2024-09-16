@@ -2,7 +2,7 @@ package com.example.dream_of_refrigerator.controller.recipe;
 
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeDetailFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeFindResponseDto;
-import com.example.dream_of_refrigerator.dto.recipe.response.RecipeRecommendFindResponseDto;
+
 import com.example.dream_of_refrigerator.service.recipe.RecipeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,5 +34,16 @@ public class RecipeController {
     @GetMapping("/recommend")
     public ResponseEntity<List<RecipeFindResponseDto>> recommend(){
         return ResponseEntity.ok(recipeService.findRecommendRecipe());
+    }
+
+    @GetMapping("/favorite/{page}")
+    public ResponseEntity<List<RecipeFindResponseDto>> recommend(@PathVariable Integer page){
+        return ResponseEntity.ok(recipeService.findFavorite(page));
+    }
+
+    @GetMapping("/category/{category}/{page}")
+    public ResponseEntity<List<RecipeFindResponseDto>> findByCategory(@PathVariable Integer page,
+                                                                      @PathVariable String category){
+        return ResponseEntity.ok(recipeService.findByCategory(category, page));
     }
 }

@@ -4,6 +4,7 @@ import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.recipe.IngredientRecipe;
 import com.example.dream_of_refrigerator.domain.recipe.Recipe;
 import com.example.dream_of_refrigerator.domain.recipe.RecipeDetail;
+import com.example.dream_of_refrigerator.domain.user.Favorite;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.IngredientFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeDetailFindResponseDto;
@@ -72,6 +73,24 @@ public class RecipeService {
         recipeFindResponseDto.removeIf(x -> x.getIngredients().stream().noneMatch(IngredientFindResponseDto::getIsContained));
 
         return recipeFindResponseDto;
+    }
+
+    public List<RecipeFindResponseDto> findByCategory(String category, Integer page){
+        String email = JwtUtils.getEmail();
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Recipe> result = recipeRepository.findByCategory(pageable, category);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        return getRecipeFindResponseDto(result.stream().collect(Collectors.toList()), userIngredients);
+    }
+
+    public List<RecipeFindResponseDto> findFavorite(Integer page){
+        String email = JwtUtils.getEmail();
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Recipe> recipes = recipeRepository.findFavorite(pageable, email);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        return getRecipeFindResponseDto(recipes.stream().collect(Collectors.toList()), userIngredients);
     }
 
     private List<RecipeFindResponseDto> getRecipeFindResponseDto(List<Recipe> result, List<UserIngredient> userIngredients){

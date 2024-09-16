@@ -1,7 +1,9 @@
 package com.example.dream_of_refrigerator.controller.user;
 
 import com.example.dream_of_refrigerator.dto.user.request.LoginRequestDto;
+import com.example.dream_of_refrigerator.dto.user.request.RefreshRequestDto;
 import com.example.dream_of_refrigerator.dto.user.request.SignUpRequestDto;
+import com.example.dream_of_refrigerator.dto.user.response.AuthToken;
 import com.example.dream_of_refrigerator.dto.user.response.LoginResponseDto;
 import com.example.dream_of_refrigerator.dto.user.response.SignUpResponseDto;
 import com.example.dream_of_refrigerator.service.user.UserService;
@@ -38,5 +40,10 @@ public class UserController {
     @PostMapping("/check/email")
     public ResponseEntity<Boolean> checkEmail(@RequestParam(value = "email") String email){
         return ResponseEntity.ok(userService.checkEmail(email));
+    }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthToken> refresh(@RequestBody RefreshRequestDto refreshRequestDto){
+        return ResponseEntity.ok(userService.refresh(refreshRequestDto));
     }
 }
