@@ -1,6 +1,7 @@
 package com.example.dream_of_refrigerator.controller.ingredient;
-
-import com.example.dream_of_refrigerator.dto.ingredient.BasicIngredientDto;
+import com.example.dream_of_refrigerator.domain.user.UserIngredient;
+import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
 import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +14,7 @@ import java.util.List;
 public class IngredientController {
     private final IngredientService ingredientService;
     //모든 재료 조회(Ingredient table에 저장된 모든 것 전체 조회)
-    @GetMapping//재료 name만 반환 (BasicIngredientDto)
+    @GetMapping//재료 id,name 반환 (BasicIngredientDto)
     public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
         List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
@@ -33,13 +34,11 @@ public class IngredientController {
         return ResponseEntity.ok(ingredients);
     }
 
-    // 재료 정보 상세조회
-/*
-    @GetMapping("/{ingredientUuid}")
-    public ResponseEntity<List<DetailIngredientDto>> getIngredientDetailsByUuid(@PathVariable String ingredientUuid) {
-        List<DetailIngredientDto> ingredients = ingredientService.findAllDetails(ingredientUuid);
-        return ResponseEntity.ok(ingredients);
+    //재료 등록(재료 검색 페이지에서 선택완료 클릭할 경우 실행)
+    @PostMapping("/send")   //선택 완료버튼 눌러서 보내기
+    public ResponseEntity<List<UserIngredient>> registerIngredients(
+            @RequestBody List<UserIngredientRequestDto> userIngredientRequestDtos){
+        List<UserIngredient> userIngredients=ingredientService.register(userIngredientRequestDtos);
+        return  ResponseEntity.ok(userIngredients);
     }
-*/
-
 }
