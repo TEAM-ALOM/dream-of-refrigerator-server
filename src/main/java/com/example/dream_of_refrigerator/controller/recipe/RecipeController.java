@@ -32,7 +32,7 @@ public class RecipeController {
     }
 
     @GetMapping("/recommend")
-    public ResponseEntity<List<RecipeRecommendFindResponseDto>> recommend(){
+    public ResponseEntity<List<RecipeFindResponseDto>> recommend(){
         return ResponseEntity.ok(recipeService.findRecommendRecipe());
     }
 }
