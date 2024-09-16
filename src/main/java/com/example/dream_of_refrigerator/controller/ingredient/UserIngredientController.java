@@ -1,0 +1,53 @@
+package com.example.dream_of_refrigerator.controller.ingredient;
+
+import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientDetailResponseDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.UserIngredientResponseDto;
+import com.example.dream_of_refrigerator.service.ingredient.UserIngredientService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/refrigerator")
+@RequiredArgsConstructor
+public class UserIngredientController {
+    private final UserIngredientService userIngredientService;
+    //{nickname}의 냉장고의 nickname조회
+    @GetMapping("/nickname")
+    public ResponseEntity<String> getUserNickname() {
+        String userNickname = userIngredientService.findUserNickname();
+        return ResponseEntity.ok(userNickname);
+    }
+
+    //냉장고에 있는 모든 재료 조회 (expiration_date - purchase_date)의 차이가 짧은 순서로 정렬하여 조회
+    @GetMapping("/userIngredient")
+    public ResponseEntity<List<UserIngredientResponseDto>> getAllUserIngredient() {
+        List<UserIngredientResponseDto> userIngredients = userIngredientService.findAll();
+        return ResponseEntity.ok(userIngredients);
+    }
+
+    //냉장고에 있는 특정 재료 상세 조회
+    @GetMapping("userIngredient/{ingredientId}")
+    public ResponseEntity<UserIngredientDetailResponseDto> getDetailUserIngredient(@PathVariable("ingredientId")Long ingredientId){
+        UserIngredientDetailResponseDto detailIngredient=userIngredientService.findDetail(ingredientId);
+        return ResponseEntity.ok(detailIngredient);
+    }
+
+    // 냉장고에 있는 특정 재료 정보 수정
+    @PatchMapping("userIngredient/{ingredientId}")
+    public ResponseEntity<UserIngredientDetailResponseDto> editUserIngredient(
+            @PathVariable("ingredientId") Long ingredientId,
+            @RequestBody UserIngredientRequestDto requestDto) {
+        UserIngredientDetailResponseDto detailIngredient = userIngredientService.edit(ingredientId, requestDto);
+        return ResponseEntity.ok(detailIngredient);
+    }
+    // 냉장고에 있는 특정 재료 삭제
+    @DeleteMapping("userIngredient/{ingredientId}")
+    public ResponseEntity<Void> deleteUserIngredient(@PathVariable("ingredientId") Long ingredientId) {
+        userIngredientService.delete(ingredientId);
+        return ResponseEntity.noContent().build();  // 성공적으로 삭제된 경우 204 응답
+    }
+}

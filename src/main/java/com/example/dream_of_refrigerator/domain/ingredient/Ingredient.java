@@ -28,15 +28,6 @@ public class Ingredient {
     @Column(nullable = false)
     private String name;    //재료 이름
 
-    // 보관 방법 (냉장, 냉동)
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean isRefrigerated; // 냉장 보관 여부(기본값 false 0)
-
-    @Column(nullable = false)
-    @ColumnDefault("false")
-    private Boolean isFrozen; // 냉동 보관 여부(기본값 false 0)
-
     @OneToMany(mappedBy = "ingredient")
     @Builder.Default
     private Set<IngredientRecipe> ingredientRecipes = new LinkedHashSet<>();

@@ -10,6 +10,7 @@ import com.example.dream_of_refrigerator.dto.recipe.response.RecipeDetailFindRes
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeRecommendFindResponseDto;
 import com.example.dream_of_refrigerator.global.util.JwtUtils;
+import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
 import com.example.dream_of_refrigerator.repository.recipe.RecipeDetailRepository;
 import com.example.dream_of_refrigerator.repository.recipe.RecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -26,24 +27,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-@Transactional
+@Transactional(readOnly = true)
 public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeDetailRepository recipeDetailRepository;
+    private final UserIngredientRepository userIngredientRepository;
     // 조회
-    @Transactional(readOnly = true)
-    public List<RecipeFindResponseDto> findAll(Integer page){
-        Pageable pageable = PageRequest.of(page, 10);
 
+    public List<RecipeFindResponseDto> findAll(Integer page){
+        String email = JwtUtils.getEmail();
+        Pageable pageable = PageRequest.of(page, 10);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
         Page<Recipe> result = recipeRepository.findAll(pageable);
 
-        return result.stream()
-                .map(RecipeFindResponseDto::new)
-                .collect(Collectors.toList());
+        return getRecipeFindResponseDto(result.stream().collect(Collectors.toList()), userIngredients);
     }
 
     // 디테일 조회
-    @Transactional(readOnly = true)
+
     public List<RecipeDetailFindResponseDto> findRecipeDetail(Long recipeId){
         List<RecipeDetail> result = recipeDetailRepository.findByRecipeId(recipeId);
 
@@ -53,53 +54,71 @@ public class RecipeService {
     }
 
 
-    @Transactional(readOnly = true)
     public List<RecipeFindResponseDto> search(String keyword){
-        List<Recipe> result = recipeRepository.search(keyword);
-
-        return result.stream()
-                .map(RecipeFindResponseDto::new)
-                .collect(Collectors.toList());
-    }
-    @Transactional(readOnly = true)
-    public List<RecipeRecommendFindResponseDto> findRecommendRecipe(){
         String email = JwtUtils.getEmail();
-        List<RecipeRecommendFindResponseDto> recommendRecipes = new ArrayList<>();
-        List<Recipe> result = recipeRepository.findRecommendRecipes(email);
+        List<Recipe> result = recipeRepository.search(keyword);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
 
+        return getRecipeFindResponseDto(result, userIngredients);
+    }
+
+    public List<RecipeFindResponseDto> findRecommendRecipe(){
+        String email = JwtUtils.getEmail();
+
+        List<Recipe> result = recipeRepository.findAll();
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        List<RecipeFindResponseDto> recipeFindResponseDto = getRecipeFindResponseDto(result, userIngredients);
+        recipeFindResponseDto.removeIf(x -> x.getIngredients().stream().noneMatch(IngredientFindResponseDto::getIsContained));
+
+        return recipeFindResponseDto;
+    }
+
+    private List<RecipeFindResponseDto> getRecipeFindResponseDto(List<Recipe> result, List<UserIngredient> userIngredients){
+        List<RecipeFindResponseDto> recipes = new ArrayList<>();
         for (Recipe recipe : result) {
-            List<IngredientFindResponseDto> ingredients = new ArrayList<>();
+            Map<Long, IngredientFindResponseDto> ingredientMap = new HashMap<>();
             Set<IngredientRecipe> ingredientRecipes = recipe.getIngredientRecipes();
             for (IngredientRecipe ingredientRecipe : ingredientRecipes) {
                 // 여기에는 recipe에 해당된 ingredient만 있음
                 Ingredient ingredient = ingredientRecipe.getIngredient();
-                Set<UserIngredient> userIngredients = ingredient.getUserIngredients();
-                for (UserIngredient userIngredient : userIngredients) {
-                    log.info("{}", userIngredient.getId());
-                    IngredientFindResponseDto build = IngredientFindResponseDto.builder()
-                            .id(userIngredient.getIngredient().getId())
-                            .category(userIngredient.getIngredient().getCategory())
-                            .name(userIngredient.getIngredient().getName())
-                            .quantity(userIngredient.getQuantity())
-                            .expirationDate(userIngredient.getExpirationDate())
-                            .purchaseDate(userIngredient.getPurchaseDate())
-                            .build();
-
-                    ingredients.add(build);
-                }
-
+                IngredientFindResponseDto ingredientFindResponseDto = IngredientFindResponseDto.builder()
+                        .id(ingredient.getId())
+                        .name(ingredient.getName())
+                        .category(ingredient.getCategory())
+                        .isContained(false)
+                        .build();
+                ingredientMap.put(ingredient.getId(), ingredientFindResponseDto);
             }
-            ingredients = ingredients.stream().sorted(Comparator.comparing(IngredientFindResponseDto::getExpirationDate)).collect(Collectors.toList());
-            RecipeRecommendFindResponseDto recommendRecipe = RecipeRecommendFindResponseDto.builder()
+            for (UserIngredient userIngredient : userIngredients) {
+                Long id = userIngredient.getIngredient().getId();
+                if (ingredientMap.containsKey(id)){
+                    IngredientFindResponseDto ingredientFindResponseDto = ingredientMap.get(id);
+                    ingredientFindResponseDto.setExpirationDate(userIngredient.getExpirationDate());
+                    ingredientFindResponseDto.setIsContained(true);
+                    ingredientFindResponseDto.setPurchaseDate(userIngredient.getPurchaseDate());
+                    ingredientFindResponseDto.setQuantity(userIngredient.getQuantity());
+                }
+            }
+
+            List<IngredientFindResponseDto> ingredients = new ArrayList<>(ingredientMap.values());
+            ingredients = ingredients.stream()
+                    .sorted(Comparator.comparing(IngredientFindResponseDto::getIsContained).reversed()
+                            .thenComparing(IngredientFindResponseDto::getExpirationDate, Comparator.nullsLast(Comparator.naturalOrder())))
+                    .collect(Collectors.toList());
+            RecipeFindResponseDto recommendRecipe = RecipeFindResponseDto.builder()
                     .id(recipe.getId())
                     .ingredients(ingredients)
                     .title(recipe.getTitle())
                     .category(recipe.getCategory())
                     .thumbnail(recipe.getThumbnail())
                     .build();
-            recommendRecipes.add(recommendRecipe);
+            recipes.add(recommendRecipe);
         }
 
-        return recommendRecipes;
+
+        return recipes;
     }
+
+
 }
