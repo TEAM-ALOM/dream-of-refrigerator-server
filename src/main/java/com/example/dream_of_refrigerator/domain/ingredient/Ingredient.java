@@ -28,12 +28,13 @@ public class Ingredient {
     @Column(nullable = false)
     private String name;    //재료 이름
 
-
+    @OneToMany(mappedBy = "ingredient")
+    @Builder.Default
+    private Set<IngredientRecipe> ingredientRecipes = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "ingredient")
     @Builder.Default
     private Set<UserIngredient> userIngredients = new LinkedHashSet<>();
-
     /*
     long과 Long의 차이
     long : 원시타입 (null할당 불가능)
@@ -41,5 +42,3 @@ public class Ingredient {
     */
 
 }
-//@Builder.Default
-//private Set<IngredientRecipe> ingredientRecipes = new LinkedHashSet<>();

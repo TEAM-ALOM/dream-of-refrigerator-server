@@ -9,9 +9,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient,String>, JpaSpecificationExecutor<Ingredient> {
     List<Ingredient> findByCategory(String category);
     Optional<Ingredient> findById(Long id);
-
 }

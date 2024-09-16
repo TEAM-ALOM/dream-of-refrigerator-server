@@ -1,9 +1,7 @@
 package com.example.dream_of_refrigerator.controller.ingredient;
-
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
-
 import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

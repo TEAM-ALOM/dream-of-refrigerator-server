@@ -15,13 +15,14 @@ spring:
   # JPA 설정
   jpa:
     database-platform: org.hibernate.dialect.MySQL8Dialect
-    generate-ddl: true
-    hibernate:
-      ddl-auto: none
-      properties:
+    show-sql: true
+    database: mysql
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        hbm2ddl.import_files_sql_extractor: org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor
         current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
         default_batch_fetch_size: 100
         jdbc.batch_size: 1000
-        order_inserts: true
-        order_updates: true
         format_sql: true
+
