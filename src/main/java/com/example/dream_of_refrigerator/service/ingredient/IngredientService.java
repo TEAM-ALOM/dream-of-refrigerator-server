@@ -14,6 +14,7 @@ import com.example.dream_of_refrigerator.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
     private final UserRepository userRepository;
@@ -30,12 +32,14 @@ public class IngredientService {
 
 
     // -> 모든 재료 조회 (기본 전체 조회)
+    @Transactional(readOnly = true)
     public List<BasicIngredientDto> findAllBasic() {
         return ingredientRepository.findAll().stream()
                 .map(ingredient -> new BasicIngredientDto(ingredient.getId(),ingredient.getName())).collect(Collectors.toList());
 
     }
     // -> 카테고리별 재료 조회
+    @Transactional(readOnly = true)
     public List<BasicIngredientDto> findByCategory(String category) {
         return ingredientRepository.findByCategory(category).
                 stream().map(ingredient -> new BasicIngredientDto(ingredient.getId(),ingredient.getName())).collect(Collectors.toList());
@@ -43,6 +47,7 @@ public class IngredientService {
     }
 
     //재료 검색 (검색한 단어 들어간 모든 재료)
+    @Transactional(readOnly = true)
     public List<BasicIngredientDto> searchIngredients(String searchTerm) {
         // Specification 객체 생성
         Specification<Ingredient> spec = (root, query, criteriaBuilder) -> {
@@ -56,8 +61,8 @@ public class IngredientService {
                 .collect(Collectors.toList());
     }
 
-    //재료 등록
-    // 재료 등록 (중복 방지 기능 포함)
+    // 재료 등록
+    @Transactional
     public List<UserIngredient> register(List<UserIngredientRequestDto> userIngredientRequestDtos) {
         String email = JwtUtils.getEmail();
         User user = userRepository.findByEmail(email)

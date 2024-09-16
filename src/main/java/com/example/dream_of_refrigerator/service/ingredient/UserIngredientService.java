@@ -12,6 +12,7 @@ import com.example.dream_of_refrigerator.repository.ingredient.IngredientReposit
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
 import com.example.dream_of_refrigerator.repository.user.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -20,18 +21,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserIngredientService {
     private final UserIngredientRepository userIngredientRepository;
     private final UserRepository userRepository;
-    private final IngredientRepository ingredientRepository;
 
     public UserIngredientService(UserIngredientRepository userIngredientRepository, UserRepository userRepository, IngredientRepository ingredientRepository) {
         this.userIngredientRepository = userIngredientRepository;
         this.userRepository = userRepository;
-        this.ingredientRepository = ingredientRepository;
     }
 
     //사용자 냉장고에 있는 재료를 (expiration_date - purchase_date)의 차이가 짧은 순서로 정렬하여 조회
+    @Transactional(readOnly = true)
     public List<UserIngredientResponseDto> findAll() {
         String email = JwtUtils.getEmail();
         User user = userRepository.findByEmail(email)
@@ -48,12 +49,14 @@ public class UserIngredientService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public String findUserNickname() {//{nickname}의 냉장고
         String email = JwtUtils.getEmail();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         return user.getNickname();
     }
 
+    @Transactional(readOnly = true)
     public UserIngredientDetailResponseDto findDetail(Long ingredientId) {
         // 사용자 조회
         String email = JwtUtils.getEmail();
@@ -78,6 +81,7 @@ public class UserIngredientService {
     }
 
     // 재료 정보 수정
+    @Transactional
     public UserIngredientDetailResponseDto edit(Long ingredientId, UserIngredientRequestDto requestDto) {
         // 사용자 조회
         String email = JwtUtils.getEmail();
@@ -120,6 +124,7 @@ public class UserIngredientService {
     }
 
     // 재료 삭제
+    @Transactional
     public void delete(Long ingredientId) {
         // 사용자 조회
         String email = JwtUtils.getEmail();
