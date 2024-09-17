@@ -5,6 +5,7 @@ import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.IngredientFindAllDto;
 import com.example.dream_of_refrigerator.global.util.JwtUtils;
 import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 
@@ -34,9 +35,9 @@ public class IngredientService {
 
     // -> 모든 재료 조회 (기본 전체 조회)
     @Transactional(readOnly = true)
-    public List<BasicIngredientDto> findAllBasic() {
+    public List<IngredientFindAllDto> findAllBasic() {
         return ingredientRepository.findAll().stream()
-                .map(ingredient -> new BasicIngredientDto(ingredient.getId(),ingredient.getName())).collect(Collectors.toList());
+                .map(ingredient -> new IngredientFindAllDto(ingredient.getId(),ingredient.getName(),ingredient.getCategory())).collect(Collectors.toList());
 
     }
     // -> 카테고리별 재료 조회

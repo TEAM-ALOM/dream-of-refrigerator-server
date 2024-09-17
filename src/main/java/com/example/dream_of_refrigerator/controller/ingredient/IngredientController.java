@@ -2,6 +2,7 @@ package com.example.dream_of_refrigerator.controller.ingredient;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.IngredientFindAllDto;
 import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -23,8 +24,8 @@ public class IngredientController {
     @Operation(summary = "전체 재료 조회", description = "등록되어있는 모든 재료들을 조회합니다.")
     @ApiResponse(responseCode = "200", description = "전체 재료 조회 성공")
     @GetMapping//재료 id,name 반환 (BasicIngredientDto)
-    public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
-        List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
+    public ResponseEntity<List<IngredientFindAllDto>> getAllIngredientsBasic() {
+        List<IngredientFindAllDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
     }
 
