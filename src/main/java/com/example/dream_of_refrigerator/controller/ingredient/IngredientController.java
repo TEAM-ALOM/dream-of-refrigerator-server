@@ -2,6 +2,7 @@ package com.example.dream_of_refrigerator.controller.ingredient;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.BasicIngredientDto;
 import com.example.dream_of_refrigerator.dto.ingredient.request.UserIngredientRequestDto;
+import com.example.dream_of_refrigerator.dto.ingredient.response.IngredientFindAllDto;
 import com.example.dream_of_refrigerator.service.ingredient.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,8 @@ public class IngredientController {
     private final IngredientService ingredientService;
     //모든 재료 조회(Ingredient table에 저장된 모든 것 전체 조회)
     @GetMapping//재료 id,name 반환 (BasicIngredientDto)
-    public ResponseEntity<List<BasicIngredientDto>> getAllIngredientsBasic() {
-        List<BasicIngredientDto> ingredients = ingredientService.findAllBasic();
+    public ResponseEntity<List<IngredientFindAllDto>> getAllIngredientsBasic() {
+        List<IngredientFindAllDto> ingredients = ingredientService.findAllBasic();
         return ResponseEntity.ok(ingredients);
     }
 
