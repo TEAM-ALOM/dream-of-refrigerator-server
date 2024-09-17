@@ -53,18 +53,4 @@ public class FavoriteService {
 
         return "레시피 즐겨찾기 삭제 완료";
     }
-    @Transactional(readOnly = true)
-    public List<RecipeFindResponseDto> findFavorite(){
-        String email = JwtUtils.getEmail();
-        List<Recipe> result = new ArrayList<>();
-        List<Favorite> favorites = favoriteRepository.findByUserEmail(email);
-        for (Favorite favorite : favorites) {
-            Recipe recipe = favorite.getRecipe();
-            result.add(recipe);
-        }
-
-        return result.stream()
-                .map(RecipeFindResponseDto::new)
-                .collect(Collectors.toList());
-    }
 }

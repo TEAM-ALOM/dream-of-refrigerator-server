@@ -3,6 +3,7 @@ package com.example.dream_of_refrigerator.service.user;
 
 import com.example.dream_of_refrigerator.domain.user.User;
 import com.example.dream_of_refrigerator.dto.user.request.LoginRequestDto;
+import com.example.dream_of_refrigerator.dto.user.request.RefreshRequestDto;
 import com.example.dream_of_refrigerator.dto.user.request.SignUpRequestDto;
 import com.example.dream_of_refrigerator.dto.user.response.AuthToken;
 import com.example.dream_of_refrigerator.dto.user.response.LoginResponseDto;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -92,5 +94,29 @@ public class UserService{
     public Boolean checkEmail(String email){
         Optional<User> userOptional = userRepository.findByEmail(email);
         return userOptional.isEmpty();
+    }
+
+    public AuthToken refresh(RefreshRequestDto refreshRequestDto){
+        String refreshToken = refreshRequestDto.getRefreshToken();
+
+        JwtUtils.validateToken(refreshToken);
+
+        String email = JwtUtils.getEmailFromRefreshToken(refreshToken);
+
+        User findUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("사용자가 존재하지 않습니디."));
+
+        String role = findUser.getRole();
+        List<String> roles = new ArrayList<>();
+
+        for (String s : role.split(",")) {
+            roles.add(s);
+        }
+
+        AuthToken newAuthToken = JwtUtils.generateToken(findUser.getEmail(), roles);
+        findUser.setRefreshToken(newAuthToken.getRefreshToken());
+        userRepository.save(findUser);
+
+        return newAuthToken;
     }
 }
