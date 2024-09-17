@@ -32,17 +32,19 @@ public class UserController {
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto loginRequestDto){
         return ResponseEntity.ok(userService.login(loginRequestDto));
     }
-
+    @Operation(summary = "로그아웃", description = "로그아웃을 진행합니다.")
     @PostMapping("/logout")
     public ResponseEntity<String> logout(){
         return ResponseEntity.ok(userService.logout());
     }
-
+    @Operation(summary = "닉네임 중복확인", description = "닉네임 중복 여부를 확인합니다.")
+    @ApiResponse(responseCode = "200", description = "중복 확인 성공")
     @PostMapping("/check/nickname")
     public ResponseEntity<Boolean> checkNickname(@RequestParam(value = "nickname") String nickname){
         return ResponseEntity.ok(userService.checkNickname(nickname));
     }
-
+    @Operation(summary = "이메일 중복확인", description = "이메일 중복 여부를 확인합니다.")
+    @ApiResponse(responseCode = "200", description = "중복 확인 성공")
     @PostMapping("/check/email")
     public ResponseEntity<Boolean> checkEmail(@RequestParam(value = "email") String email){
         return ResponseEntity.ok(userService.checkEmail(email));
