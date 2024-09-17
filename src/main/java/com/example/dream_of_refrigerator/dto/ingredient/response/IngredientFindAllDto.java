@@ -6,9 +6,11 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor //기본생성자
-public class BasicIngredientDto {
+public class IngredientFindAllDto {
     @Schema(description = "재료의 고유 ID")
     private Long id;
     @Schema(description = "재료 이름")
     private String name;
+    @Schema(description = "카테고리 이름")
+    private String categoryName;
 }
