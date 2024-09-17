@@ -26,3 +26,4 @@ spring:
         jdbc.batch_size: 1000
         format_sql: true
 
+

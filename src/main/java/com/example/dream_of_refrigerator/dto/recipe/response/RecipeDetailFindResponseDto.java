@@ -10,10 +10,9 @@ import lombok.Getter;
 @Builder
 public class RecipeDetailFindResponseDto {
     private String description;
-    private String image;
+
 
     public RecipeDetailFindResponseDto(RecipeDetail recipeDetail){
         this.description = recipeDetail.getDescription();
-        this.image = recipeDetail.getImage();
     }
 }

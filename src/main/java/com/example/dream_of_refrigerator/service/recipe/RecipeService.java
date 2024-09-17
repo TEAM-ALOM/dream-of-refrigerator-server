@@ -4,13 +4,16 @@ import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import com.example.dream_of_refrigerator.domain.recipe.IngredientRecipe;
 import com.example.dream_of_refrigerator.domain.recipe.Recipe;
 import com.example.dream_of_refrigerator.domain.recipe.RecipeDetail;
+import com.example.dream_of_refrigerator.domain.user.Favorite;
 import com.example.dream_of_refrigerator.domain.user.UserIngredient;
 import com.example.dream_of_refrigerator.dto.ingredient.response.IngredientFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeDetailFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeRecommendFindResponseDto;
 import com.example.dream_of_refrigerator.global.util.JwtUtils;
+import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
+
 import com.example.dream_of_refrigerator.repository.recipe.RecipeDetailRepository;
 import com.example.dream_of_refrigerator.repository.recipe.RecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.*;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +44,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeDetailRepository recipeDetailRepository;
     private final UserIngredientRepository userIngredientRepository;
+
     // 조회
 
     public List<RecipeFindResponseDto> findAll(Integer page){
@@ -72,6 +85,24 @@ public class RecipeService {
         recipeFindResponseDto.removeIf(x -> x.getIngredients().stream().noneMatch(IngredientFindResponseDto::getIsContained));
 
         return recipeFindResponseDto;
+    }
+
+    public List<RecipeFindResponseDto> findByCategory(String category, Integer page){
+        String email = JwtUtils.getEmail();
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Recipe> result = recipeRepository.findByCategory(pageable, category);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        return getRecipeFindResponseDto(result.stream().collect(Collectors.toList()), userIngredients);
+    }
+
+    public List<RecipeFindResponseDto> findFavorite(Integer page){
+        String email = JwtUtils.getEmail();
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<Recipe> recipes = recipeRepository.findFavorite(pageable, email);
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        return getRecipeFindResponseDto(recipes.stream().collect(Collectors.toList()), userIngredients);
     }
 
     private List<RecipeFindResponseDto> getRecipeFindResponseDto(List<Recipe> result, List<UserIngredient> userIngredients){

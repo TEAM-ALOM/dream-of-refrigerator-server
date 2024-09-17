@@ -27,6 +27,19 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long> {
             "left join fetch r.ingredientRecipes ir " +
             "left join fetch ir.ingredient i ")
     List<Recipe> findAll();
+
+    @Query("select r from recipe r " +
+            "left join fetch r.ingredientRecipes ir " +
+            "left join fetch ir.ingredient i " +
+            "where r.category=:category")
+    Page<Recipe> findByCategory(Pageable pageable, @Param("category") String category);
+    @Query("select r from recipe r " +
+            "left join fetch r.ingredientRecipes ir " +
+            "left join fetch ir.ingredient i " +
+            "left join fetch r.favorites f " +
+            "left join fetch f.user u "+
+            "where u.email=:email")
+    Page<Recipe> findFavorite(Pageable pageable, @Param("email") String email);
     @Query("select r from recipe r " +
             "left join fetch r.ingredientRecipes ir " +
             "left join fetch ir.ingredient i " +

@@ -37,7 +37,7 @@ public class JwtUtils {
                 .setSubject(userId)
                 .claim("roles", roles)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME + 9999999999999L))
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
                 .compact();
 
@@ -101,10 +101,10 @@ public class JwtUtils {
         return token;
     }
 
-    public static String getUserIdFromRefreshToken(String refreshToken){
+    public static String getEmailFromRefreshToken(String refreshToken){
         Claims body = JwtUtils.parseClaims(refreshToken);
-        String userId = body.get("sub", String.class);
+        String email = body.get("sub", String.class);
 
-        return userId;
+        return email;
     }
 }

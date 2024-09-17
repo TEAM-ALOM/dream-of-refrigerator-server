@@ -14,11 +14,6 @@ import java.util.List;
 public class FavoriteController {
     private final FavoriteService favoriteService;
 
-    @GetMapping
-    public ResponseEntity<List<RecipeFindResponseDto>> findAll(){
-        return ResponseEntity.ok(favoriteService.findFavorite());
-    }
-
     @PutMapping("/{recipeId}")
     public ResponseEntity<String> save(@PathVariable Long recipeId){
         return ResponseEntity.ok(favoriteService.save(recipeId));

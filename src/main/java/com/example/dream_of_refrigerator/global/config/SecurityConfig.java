@@ -34,7 +34,8 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers( "/**").permitAll())
+                        .requestMatchers( "/api/sign-up", "/api/login", "/api/check/**", "/api/refresh","/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/api/**").hasRole("USER"))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtFilter(customUserDetailService), UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();
