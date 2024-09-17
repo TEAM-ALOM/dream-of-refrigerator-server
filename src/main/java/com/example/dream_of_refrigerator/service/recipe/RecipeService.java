@@ -11,7 +11,9 @@ import com.example.dream_of_refrigerator.dto.recipe.response.RecipeDetailFindRes
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeFindResponseDto;
 import com.example.dream_of_refrigerator.dto.recipe.response.RecipeRecommendFindResponseDto;
 import com.example.dream_of_refrigerator.global.util.JwtUtils;
+import com.example.dream_of_refrigerator.repository.ingredient.IngredientRepository;
 import com.example.dream_of_refrigerator.repository.ingredient.UserIngredientRepository;
+
 import com.example.dream_of_refrigerator.repository.recipe.RecipeDetailRepository;
 import com.example.dream_of_refrigerator.repository.recipe.RecipeRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +21,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.*;
+import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,6 +44,7 @@ public class RecipeService {
     private final RecipeRepository recipeRepository;
     private final RecipeDetailRepository recipeDetailRepository;
     private final UserIngredientRepository userIngredientRepository;
+
     // 조회
 
     public List<RecipeFindResponseDto> findAll(Integer page){
