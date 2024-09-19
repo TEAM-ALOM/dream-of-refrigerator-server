@@ -57,4 +57,10 @@ public class RecipeController {
         return ResponseEntity.ok(recipeService.findByCategory(category, page));
     }
 
+    @GetMapping("/random")
+    @Operation(summary = "랜덤 레시피 조회", description = "랜덤한 레시피 1개만 리턴합니다.")
+    public ResponseEntity<RecipeFindResponseDto> findRandomRecipe(){
+        return ResponseEntity.ok(recipeService.findRandomRecipe());
+    }
+
 }

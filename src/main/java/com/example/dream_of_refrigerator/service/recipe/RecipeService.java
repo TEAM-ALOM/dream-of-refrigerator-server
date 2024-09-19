@@ -108,10 +108,18 @@ public class RecipeService {
         return getRecipeFindResponseDto(recipes.stream().collect(Collectors.toList()), userIngredients);
     }
 
-//    public List<RecipeFindResponseDto> findRandomRecipe(){
-//        Random random = new Random();
-//        random.nextLong(1, 537)
-//    }
+    public RecipeFindResponseDto findRandomRecipe(){
+        String email = JwtUtils.getEmail();
+        Random random = new Random();
+        long l = random.nextLong(499)+1;
+        Recipe recipe = recipeRepository
+                .findById(l)
+                .orElseThrow(() -> new RuntimeException("레시피가 존재하지 않습니다."));
+        List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
+
+        List<RecipeFindResponseDto> recipeFindResponseDto = getRecipeFindResponseDto(List.of(recipe), userIngredients);
+        return recipeFindResponseDto.get(0);
+    }
     private List<RecipeFindResponseDto> getRecipeFindResponseDto(List<Recipe> result, List<UserIngredient> userIngredients){
         List<RecipeFindResponseDto> recipes = new ArrayList<>();
         for (Recipe recipe : result) {
