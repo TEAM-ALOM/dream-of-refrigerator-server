@@ -1,5 +1,6 @@
 package com.example.dream_of_refrigerator.dto.ingredient.response;
 
+import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,4 +14,6 @@ public class IngredientFindAllDto {
     private String name;
     @Schema(description = "카테고리 이름")
     private String categoryName;
+
+
 }

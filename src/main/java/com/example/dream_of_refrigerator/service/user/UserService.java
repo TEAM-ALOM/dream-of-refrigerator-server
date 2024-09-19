@@ -62,6 +62,10 @@ public class UserService{
     }
 
     public SignUpResponseDto signUpUser(SignUpRequestDto signUpRequestDto) {
+        Optional<User> userOptional = userRepository.findByEmail(signUpRequestDto.getEmail());
+
+        if(userOptional.isPresent()){ throw new RuntimeException("계정이 이미 존재합니다."); }
+
         User user = signUpRequestDto.toEntity();
         user.hashPassword(passwordEncoder);
 
@@ -72,7 +76,6 @@ public class UserService{
                 .nickname(save.getNickname())
                 .email(save.getEmail())
                 .build();
-
     }
 
     public String logout() {
@@ -86,12 +89,18 @@ public class UserService{
     }
     @Transactional(readOnly = true)
     public Boolean checkNickname(String nickname){
+        if(nickname == null) {
+            throw new RuntimeException("닉네임이 존재하지 않습니다.");
+        }
         Optional<User> userOptional = userRepository.findByNickname(nickname);
         return userOptional.isEmpty();
 
     }
     @Transactional(readOnly = true)
     public Boolean checkEmail(String email){
+        if(email == null){
+            throw new RuntimeException("이메일이 존재하지 않습니다.");
+        }
         Optional<User> userOptional = userRepository.findByEmail(email);
         return userOptional.isEmpty();
     }

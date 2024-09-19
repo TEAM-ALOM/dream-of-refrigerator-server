@@ -20,13 +20,6 @@ import java.util.List;
 @Tag(name = "냉장고(홈) API", description = "사용자의 냉장고(홈)과 관련된 API입니다.")
 public class UserIngredientController {
     private final UserIngredientService userIngredientService;
-    @Operation(summary = "사용자의 nickname조회", description = "{nickname}의 냉장고 에 들어갈 nickname을 조회합니다.")
-    @ApiResponse(responseCode = "200", description = "사용자의 nickname 조회 성공")
-    @GetMapping("/nickname")
-    public ResponseEntity<String> getUserNickname() {
-        String userNickname = userIngredientService.findUserNickname();
-        return ResponseEntity.ok(userNickname);
-    }
 
     @Operation(summary = "사용자가 냉장고에 등록한 재료 전체 조회", description = "(유통기한-현재날짜)의 차이가 짧은 순서로 정렬하여 조회합니다.")
     @ApiResponse(responseCode = "200", description = "사용자의 냉장고에 등록된 모든 재료 조회 성공")

@@ -51,6 +51,9 @@ public class IngredientService {
     //재료 검색 (검색한 단어 들어간 모든 재료)
     @Transactional(readOnly = true)
     public List<BasicIngredientDto> searchIngredients(String searchTerm) {
+        if(searchTerm == null){
+            throw new RuntimeException("키워드가 존재하지 않습니다.");
+        }
         // Specification 객체 생성
         Specification<Ingredient> spec = (root, query, criteriaBuilder) -> {
             String likePattern = "%" + searchTerm + "%";

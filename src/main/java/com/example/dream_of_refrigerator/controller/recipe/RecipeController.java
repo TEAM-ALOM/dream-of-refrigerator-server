@@ -34,7 +34,7 @@ public class RecipeController {
 
     @GetMapping("/search")
     @Operation(summary = "레시피 검색", description = "parameter keyword에 사용자 입력 문자열 받아서 검색")
-    public ResponseEntity<List<RecipeFindResponseDto>> search(@RequestParam(name = "keyword") String keyword){
+    public ResponseEntity<List<RecipeFindResponseDto>> search(@RequestParam(name = "keyword", required = false) String keyword){
         return ResponseEntity.ok(recipeService.search(keyword));
     }
 
@@ -55,6 +55,12 @@ public class RecipeController {
     public ResponseEntity<List<RecipeFindResponseDto>> findByCategory(@PathVariable Integer page,
                                                                       @PathVariable String category){
         return ResponseEntity.ok(recipeService.findByCategory(category, page));
+    }
+
+    @GetMapping("/random")
+    @Operation(summary = "랜덤 레시피 조회", description = "랜덤한 레시피 1개만 리턴합니다.")
+    public ResponseEntity<RecipeFindResponseDto> findRandomRecipe(){
+        return ResponseEntity.ok(recipeService.findRandomRecipe());
     }
 
 }
