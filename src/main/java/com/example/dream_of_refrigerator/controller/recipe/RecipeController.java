@@ -34,7 +34,7 @@ public class RecipeController {
 
     @GetMapping("/search")
     @Operation(summary = "레시피 검색", description = "parameter keyword에 사용자 입력 문자열 받아서 검색")
-    public ResponseEntity<List<RecipeFindResponseDto>> search(@RequestParam(name = "keyword") String keyword){
+    public ResponseEntity<List<RecipeFindResponseDto>> search(@RequestParam(name = "keyword", required = false) String keyword){
         return ResponseEntity.ok(recipeService.search(keyword));
     }
 

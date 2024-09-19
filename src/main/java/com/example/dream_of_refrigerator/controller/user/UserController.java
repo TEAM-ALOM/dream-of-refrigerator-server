@@ -40,13 +40,13 @@ public class UserController {
     @Operation(summary = "닉네임 중복확인", description = "닉네임 중복 여부를 확인합니다.")
     @ApiResponse(responseCode = "200", description = "중복 확인 성공")
     @PostMapping("/check/nickname")
-    public ResponseEntity<Boolean> checkNickname(@RequestParam(value = "nickname") String nickname){
+    public ResponseEntity<Boolean> checkNickname(@RequestParam(value = "nickname", required = false) String nickname){
         return ResponseEntity.ok(userService.checkNickname(nickname));
     }
     @Operation(summary = "이메일 중복확인", description = "이메일 중복 여부를 확인합니다.")
     @ApiResponse(responseCode = "200", description = "중복 확인 성공")
     @PostMapping("/check/email")
-    public ResponseEntity<Boolean> checkEmail(@RequestParam(value = "email") String email){
+    public ResponseEntity<Boolean> checkEmail(@RequestParam(value = "email", required = false) String email){
         return ResponseEntity.ok(userService.checkEmail(email));
     }
 

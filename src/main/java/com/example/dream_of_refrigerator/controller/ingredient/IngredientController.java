@@ -38,11 +38,11 @@ public class IngredientController {
     }
 
     //재료 검색
-    @Operation(summary = "재료 검색", description = "/api/ingredients/search?query=계 꼴로 요청. 한 글자 이상 같은 게 있으면 모두 조회됩니다.")
+    @Operation(summary = "재료 검색", description = "/api/ingredients/search?keyword=계 꼴로 요청. 한 글자 이상 같은 게 있으면 모두 조회됩니다.")
     @ApiResponse(responseCode = "200", description = "재료 검색 성공")
     @GetMapping("/search")
-    public ResponseEntity<List<BasicIngredientDto>> searchIngredients(@RequestParam String query) {
-        List<BasicIngredientDto> ingredients = ingredientService.searchIngredients(query);
+    public ResponseEntity<List<BasicIngredientDto>> searchIngredients(@RequestParam(required = false) String keyword) {
+        List<BasicIngredientDto> ingredients = ingredientService.searchIngredients(keyword);
         return ResponseEntity.ok(ingredients);
     }
 
