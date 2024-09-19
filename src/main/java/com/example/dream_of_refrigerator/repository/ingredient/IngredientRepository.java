@@ -3,6 +3,8 @@ package com.example.dream_of_refrigerator.repository.ingredient;
 import com.example.dream_of_refrigerator.domain.ingredient.Ingredient;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Arrays;
@@ -14,4 +16,6 @@ import java.util.Optional;
 public interface IngredientRepository extends JpaRepository<Ingredient,String>, JpaSpecificationExecutor<Ingredient> {
     List<Ingredient> findByCategory(String category);
     Optional<Ingredient> findById(Long id);
+
+
 }

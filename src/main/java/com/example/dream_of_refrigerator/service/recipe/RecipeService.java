@@ -68,6 +68,9 @@ public class RecipeService {
 
 
     public List<RecipeFindResponseDto> search(String keyword){
+        if(keyword == null){
+            throw new RuntimeException("키워드가 존재하지 않습니다.");
+        }
         String email = JwtUtils.getEmail();
         List<Recipe> result = recipeRepository.search(keyword);
         List<UserIngredient> userIngredients = userIngredientRepository.findByUserEmail(email);
@@ -105,6 +108,10 @@ public class RecipeService {
         return getRecipeFindResponseDto(recipes.stream().collect(Collectors.toList()), userIngredients);
     }
 
+//    public List<RecipeFindResponseDto> findRandomRecipe(){
+//        Random random = new Random();
+//        random.nextLong(1, 537)
+//    }
     private List<RecipeFindResponseDto> getRecipeFindResponseDto(List<Recipe> result, List<UserIngredient> userIngredients){
         List<RecipeFindResponseDto> recipes = new ArrayList<>();
         for (Recipe recipe : result) {
